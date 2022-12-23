@@ -2,7 +2,12 @@ class TagsController < ApplicationController
 before_action :set_tag, only: %i[ show update destroy ]
   #GET /Tags
   def index
-    @tags = Tag.all
+    if params[:q].present?
+      @tag = Tag.starting_with(params[:q])
+    else
+      @tag = Tag.all
+    end
+    # @tags = Tag.all
   end
 
   #POST /Tags
