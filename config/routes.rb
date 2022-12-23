@@ -10,5 +10,11 @@ Rails.application.routes.draw do
   put("/posts/:id", to: "posts#update")
   delete("/posts/:id", to: "posts#destroy")
 
+  get("/tags", to: "tags#index")
+  post("/tags", to: "tags#create")
+  get("/tags/:id", to: "tags#show")
+  patch("/tags/:id", to: "tags#update")
+  put("/tags/:id", to: "tags#update")
+  delete("/tags/:id", to: "tags#destroy")
 
 end
