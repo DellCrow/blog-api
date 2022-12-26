@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  include BCrypt
+  before_action :authorized, only: [:auto_login]
   before_action :set_user, only: %i[ show edit update destroy ]
 
   # GET /users or /users.json
@@ -19,15 +21,34 @@ class UsersController < ApplicationController
   def edit
   end
 
-  # POST /users or /users.json
+  # REGISTER
   def create
-    @user = User.new(user_params)
+    @user = User.create(user_params)
 
-    respond_to do |format|
-      @user.save!
-      format.html { redirect_to user_url(@user), notice: "User was successfully created." }
-      format.json { render :show, status: :created, location: @user }
+    if @user.valid?
+      token = encode_token({user_id: @user.id})
+      render json: {user: @user, token: token}, status: :created
+    else
+      render json: {error: 'Invalid username or email'}, status: :not_acceptable
     end
+  end
+
+  # LOGGING IN
+  def login
+    @user = User.find_by(email: params[:email])
+
+    # puts
+
+    if @user && @user.authenticate(params[:password])
+      token = encode_token({user_id: @user.id})
+      render json: {user: @user, token: token}
+    else
+      render json: {error: 'Invalid username or password'}, status: :unauthorized
+    end
+  end
+
+  def auto_login
+    render json: @user
   end
 
   # PATCH/PUT /users/1 or /users/1.json
@@ -58,5 +79,5 @@ class UsersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.require(:user).permit(:name, :email)
+      params.require(:user).permit(:name, :email, :password)
     end

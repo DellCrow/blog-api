@@ -3,9 +3,9 @@ before_action :set_tag, only: %i[ show update destroy ]
   #GET /Tags
   def index
     if params[:q].present?
-      @tag = Tag.starting_with(params[:q])
+      @tags = Tag.starting_with(params[:q])
     else
-      @tag = Tag.all
+      @tags = Tag.all
     end
     # @tags = Tag.all
   end

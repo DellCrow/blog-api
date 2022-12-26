@@ -78,4 +78,5 @@ class PostsController < ApplicationController
         @tag = @post.tags.find(tag_params[:tag_id])
       end
     end
+
 end

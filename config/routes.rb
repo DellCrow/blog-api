@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   resources :users
+  post "/login", to: "users#login"
+  get "/auto_login", to: "users#auto_login"
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   root("posts#index")
   # get("/posts", to: "posts#index")
@@ -12,9 +14,9 @@ Rails.application.routes.draw do
   resources :posts, except: %i[ new edit ] do
     resources :comments, except: %i[ new edit ]
   end
-  post("/posts/:id/tag", to: "posts#link_tag")
-  delete("/posts/:id/tag", to: "posts#unlink_tag")
-  get("/posts/:id/tags", to: "posts#show_tags")
+  post("/posts/:id/tag",  to: "posts#link_tag")
+  delete("/posts/:id/tag",  to: "posts#unlink_tag")
+  get("/posts/:id/tags",  to: "posts#show_tags")
 
   resources :tags, except: %i[ new edit ]
 
