@@ -1,8 +1,10 @@
 Rails.application.routes.draw do
-  resources :users
+  get "/user", to: "users#show"
+  post '/user', to: 'users#create'
+  put '/user', to: 'users#update'
+  delete '/user', to: 'users#destroy'
+
   post "/login", to: "users#login"
-  get "/auto_login", to: "users#auto_login"
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   root("posts#index")
   # get("/posts", to: "posts#index")
   # post("/posts", to: "posts#create")

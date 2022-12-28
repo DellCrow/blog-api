@@ -1,1 +1,2 @@
-json.partial! "users/user", user: @user
+# byebug
+json.partial! "users/user", user: @user, token: @token

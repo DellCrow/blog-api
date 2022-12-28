@@ -1,7 +1,8 @@
 class PostsController < ApplicationController
+  before_action :authorized, except: [ :index, :show ]
   before_action :set_post, only: [ :show, :update, :destroy, :link_tag, :unlink_tag, :show_tags ]
   before_action :set_tag, only: [ :link_tag, :unlink_tag ]
-
+  before_action :render_not_authorized, except: [ :index, :show, :create ]
   #GET /posts
   def index
     @posts = Post.all
@@ -9,7 +10,7 @@ class PostsController < ApplicationController
 
   #POST /posts
   def create
-    @post = Post.new(post_params)
+    @post = Post.new(post_params.merge!(user: @user))
     @post.save!
     render action: :show, status: :created
   end
@@ -20,11 +21,8 @@ class PostsController < ApplicationController
 
   #PUT/PATCH /posts/:id
   def update
-    if @post.update(post_params)
-      render action: :show, status: :ok
-    else
-      render json: @post.errors, status: :unprocessable_entity
-    end
+    @post.update!(post_params)
+    render action: :show, status: :ok
   end
 
   #GET /posts/:id/tags
@@ -79,4 +77,7 @@ class PostsController < ApplicationController
       end
     end
 
+    def authorized?
+      @user == @post.user
+    end
 end

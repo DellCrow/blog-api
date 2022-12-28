@@ -1,6 +1,8 @@
 class CommentsController < ApplicationController
   before_action :set_post
-  before_action :set_comment, only: [ :show, :update, :destroy ]
+  before_action :set_comment, except: [:index, :create] # only: [ :show, :update, :destroy ]
+  before_action :authorized, except: [ :index, :show ]
+  before_action :render_not_authorized, except: [ :index, :show, :create ]
 
   #GET /posts/:post_id/comments
   def index
@@ -9,7 +11,7 @@ class CommentsController < ApplicationController
 
   #POST /posts/:post_id/comments
   def create
-    @comment = @post.comments.new(comment_params)
+    @comment = @post.comments.new(comment_params.merge!(user: @user))
     @comment.save!
     render action: :show, status: :created
   end
@@ -45,5 +47,14 @@ class CommentsController < ApplicationController
 
   def comment_params
     params.require(:comment).permit(:text)
+  end
+
+  def authorized?
+    case params[:action]
+    when 'update'
+      @user == @comment.user
+    when 'destroy'
+      @user == @comment.user || @user == @post.user
+    end
   end
 end

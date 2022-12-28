@@ -22,9 +22,9 @@ gem 'jbuilder', '~> 2.7'
 # Use Active Model has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 
-gem 'rack-cors'
+gem 'rack-cors', '~> 1.1.1'
 
-gem 'jwt'
+gem 'jwt', '~>2.6.0'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
