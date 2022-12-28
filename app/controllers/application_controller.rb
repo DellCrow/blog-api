@@ -26,8 +26,9 @@ class ApplicationController < ActionController::Base
   end
 
   def logged_in_user
-    if decoded_token
-      user_id = decoded_token[0]['user_id']
+    result_token = decoded_token
+    if result_token
+      user_id = result_token[0]['user_id']
       @user = User.find_by(id: user_id)
     end
   end
@@ -54,4 +55,9 @@ class ApplicationController < ActionController::Base
       render json:  {error: e.message }, status: :unprocessable_entity
     end
 
+    def render_not_authorized
+      if !authorized?
+        render json: {error: 'Operação não autorizada'}, status: :unauthorized
+      end
+    end
 end
