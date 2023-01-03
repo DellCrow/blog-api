@@ -3,9 +3,10 @@ class PostsController < ApplicationController
   before_action :set_post, only: [ :show, :update, :destroy, :link_tag, :unlink_tag, :show_tags ]
   before_action :set_tag, only: [ :link_tag, :unlink_tag ]
   before_action :render_not_authorized, except: [ :index, :show, :create ]
+
   #GET /posts
   def index
-    @posts = Post.all
+    @posts = Post.all().includes(:likes, :comments)#, :comments, :tags, :user)
   end
 
   #POST /posts
@@ -39,16 +40,13 @@ class PostsController < ApplicationController
 
   #POST /posts/:id/tag
   def link_tag
-    # @tag = Tag.find(tag_params[:tag_id])
     @post.tags.push(@tag)
-    # render json: @post.tags, status: :ok
     @tags = @post.tags
     render 'tags/index', status: :ok
   end
 
   #DELETE /posts/:id/tag
   def unlink_tag
-    # @tag = @post.tags.find(tag_params[:tag_id])
     @post.tags.delete(@tag)
     @tags = @post.tags
     render 'tags/index', status: :ok

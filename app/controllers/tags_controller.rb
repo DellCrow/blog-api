@@ -1,5 +1,6 @@
 class TagsController < ApplicationController
-before_action :set_tag, only: %i[ show update destroy ]
+  before_action :set_tag, only: %i[ show update destroy ]
+
   #GET /Tags
   def index
     if params[:q].present?
@@ -7,7 +8,6 @@ before_action :set_tag, only: %i[ show update destroy ]
     else
       @tags = Tag.all
     end
-    # @tags = Tag.all
   end
 
   #POST /Tags
@@ -45,4 +45,5 @@ before_action :set_tag, only: %i[ show update destroy ]
     def tag_params
       params.require(:tag).permit(:name)
     end
+
 end

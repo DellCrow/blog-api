@@ -1,1 +1,1 @@
-json.partial! 'comments/comment', comment: @comment
+json.partial! 'comments/comment', comment: @comment, with_likes: true
