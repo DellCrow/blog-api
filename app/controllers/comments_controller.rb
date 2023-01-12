@@ -38,24 +38,25 @@ class CommentsController < ApplicationController
 
   private
 
-  def set_post
-    @post = Post.find(params[:post_id])
-  end
-
-  def set_comment
-    @comment = @post.comments.find(params[:id])
-  end
-
-  def comment_params
-    params.require(:comment).permit(:text)
-  end
-
-  def authorized?
-    case params[:action]
-    when 'update'
-      @user == @comment.user
-    when 'destroy'
-      @user == @comment.user || @user == @post.user
+    def set_post
+      @post = Post.find(params[:post_id])
     end
-  end
+
+    def set_comment
+      @comment = @post.comments.find(params[:id])
+    end
+
+    def comment_params
+      params.require(:comment).permit(:text)
+    end
+
+    def authorized?
+      case params[:action]
+      when 'update'
+        @user == @comment.user
+      when 'destroy'
+        @user == @comment.user || @user == @post.user
+      end
+    end
+
 end

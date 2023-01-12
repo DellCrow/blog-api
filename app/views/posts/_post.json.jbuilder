@@ -1,4 +1,4 @@
-json.extract! post, :id, :title, :description
+json.extract! post, :id, :title, :description, :user_id, :created_at, :updated_at
 if with_childs
   json.tags do
     json.array! post.tags, partial: "tags/tag", as: :tag
@@ -16,4 +16,10 @@ end
 if !with_childs
   json.likes_count post.likes.size
   json.comments_count post.comments.size
+end
+
+if @user && post.likes.find{| userliked | userliked.user_id == @user.id }
+  json.liked true
+else
+  json.liked false
 end

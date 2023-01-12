@@ -4,5 +4,5 @@ class Tag < ApplicationRecord
 
   default_scope{ order(:name)}
 
-  scope :starting_with, -> (word) {where("name LIKE ?", "#{word}%")}
+  # scope :starting_with, -> (word) {where("name LIKE ?", "#{word}%")}
 end

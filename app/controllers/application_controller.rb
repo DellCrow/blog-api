@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  before_action :default_request_format
+  before_action :set_current_user
   before_action :authorized
   protect_from_forgery with: :null_session
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
@@ -41,6 +43,10 @@ class ApplicationController < ActionController::Base
     render json: {error: 'Please log in'}, status: :unauthorized unless logged_in?
   end
 
+  def set_current_user
+    logged_in_user
+  end
+
   private
 
     def render_not_found e
@@ -59,5 +65,9 @@ class ApplicationController < ActionController::Base
       if !authorized?
         render json: {error: 'Operação não autorizada'}, status: :unauthorized
       end
+    end
+
+    def default_request_format
+      request.format = :json
     end
 end

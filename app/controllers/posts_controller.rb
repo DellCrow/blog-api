@@ -2,11 +2,11 @@ class PostsController < ApplicationController
   before_action :authorized, except: [ :index, :show ]
   before_action :set_post, only: [ :show, :update, :destroy, :link_tag, :unlink_tag, :show_tags ]
   before_action :set_tag, only: [ :link_tag, :unlink_tag ]
-  before_action :render_not_authorized, except: [ :index, :show, :create ]
+  before_action :render_not_authorized, except: [ :index, :show, :create, :show_tags, :link_tag, :unlink_tag ]
 
   #GET /posts
   def index
-    @posts = Post.all().includes(:likes, :comments)#, :comments, :tags, :user)
+    @posts = Post.all().includes(:likes, :comments)
   end
 
   #POST /posts
@@ -45,7 +45,7 @@ class PostsController < ApplicationController
     render 'tags/index', status: :ok
   end
 
-  #DELETE /posts/:id/tag
+  #DELETE /posts/:id/tag/:tag_id
   def unlink_tag
     @post.tags.delete(@tag)
     @tags = @post.tags
@@ -59,7 +59,7 @@ class PostsController < ApplicationController
     end
 
     def tag_params
-      params.require(:post).permit(:tag_id, tag_id: [])
+      params.require(:post).permit(:tag_id)
     end
 
     def set_post
@@ -71,7 +71,7 @@ class PostsController < ApplicationController
       when 'link_tag'
         @tag = Tag.find(tag_params[:tag_id])
       when 'unlink_tag'
-        @tag = @post.tags.find(tag_params[:tag_id])
+        @tag = @post.tags.find(params[:tag_id])
       end
     end
 
